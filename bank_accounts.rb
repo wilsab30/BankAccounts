@@ -1,18 +1,38 @@
+require "awesome_print"
+require "csv"
+
 module Bank
 
   class Account
 
-    attr_reader :account_number, :account_balance, :account_number
+    attr_reader :account_number, :account_balance, :account_number, :accounts
 
-    def initialize
-      @account_balance = 500.00
-      create_account
+    def initialize(account_id, balance, open_date)
+      @open_date = open_date
+      @account_balance = balance
+      @account_id = account_id
+
     end
 
-    def create_account
-      @account_number = rand(100000..999999)
-      transactions
+
+    def self.create_accounts
+      @@accounts = []
+      CSV.open("support/accounts.csv", 'r').each do |line|
+        @@accounts << self.new(line[0], line[1].to_i, line[2])
+      end
+      return @@accounts
     end
+
+    def self.all
+      return @@accounts
+      end
+
+
+    def self.find(account_id)
+    return @@account_id
+    end
+
+
 
     def transactions
       puts "Welcome to Ada Savings and Loan. What type of transaction would you like to make?"
@@ -66,8 +86,12 @@ module Bank
 
 end
 
-my_account = Bank::Account.new
+Bank::Account.create_accounts
 
+puts Bank::Account.all
+
+# my_account = Bank::Account.new
+# my_account = Bank::Account.find()
   # class Owner
   #
   #   def initialize
